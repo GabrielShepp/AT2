@@ -1,0 +1,121 @@
+
+import numpy as np
+
+
+def tipoGrafo(matriz):
+    x = 0
+    y = 0
+    z = 0
+    f = np.shape(matriz)[0]
+    for i in range(0, f):
+        for j in range(0, f):
+            if not matriz[i][j] == matriz[j][i]:
+                x = x + 1
+                break
+        if x == 1:
+            break
+    for i in range(0, f):
+        for j in range(0, f):
+            if matriz[i][j] > 1:
+                y = y + 20
+                break
+        if y == 20:
+            break
+    for i in range(0, f):
+        if matriz[i][i] == matriz[i][i] & matriz[i][i] != 0:
+            z = z + 30
+            break
+    if z == 30:
+        x = x + z
+    else:
+        x = x + y
+    print(x)
+    return x
+
+
+def Verifica_adjacencia(matriz, vi, vj):
+    if matriz[vj - 1][vi - 1] > 0:
+        print(True)
+        return True
+    else:
+        print(False)
+        return False
+
+
+def criaMatriz(Inst):
+    print("Abrindo o arquivo:", Inst, "\n\n")
+    local = 'C:/Users/gabri/AT1/Instancias/' + Inst + ".txt"  # salvando o local do arquivo
+
+    with open(local, "rb") as m:
+        matriz = np.genfromtxt(m, dtype='int64')  # transformando os dados do DataSet em Matriz
+    return matriz  # Retornado a matriz para que possa ser utilizada
+
+
+def calcDensidade(matriz):
+    z = matriz.shape[0]
+    y = 0
+    for i in range(0, matriz.shape[0]):
+        for j in range(0, matriz.shape[0]):
+            y = matriz[i][j] + y
+
+    w = z - 1
+    h = y / (z * w)
+    print(f'{h:.3f}')
+    return f'{h:.3f}'
+
+
+def insereAresta(matriz, vi, vj):
+    x = tipoGrafo(matriz)
+    if x % 2 == 0:
+        if x >= 30:
+            matriz[vi][vj] = matriz[vi][vj] + 1
+        else:
+            matriz[vi][vj] = matriz[vi][vj] + 1
+            matriz[vj][vi] = matriz[vj][vi] + 1
+    else:
+        matriz[vi][vj] = matriz[vi][vj] + 1
+    print(matriz)
+    return matriz
+
+
+def removeAresta(matriz, vi, vj):
+    x = tipoGrafo(matriz)
+    if matriz[vi - 1][vj - 1] != 0:
+        if x % 2 == 0:
+            if matriz[vi - 1][vj - 1] == matriz[vi - 1][vi - 1]:
+                matriz[vi - 1][vj - 1] = matriz[vi - 1][vj - 1] - 1
+            else:
+                matriz[vi - 1][vj - 1] = matriz[vi - 1][vj - 1] - 1
+                matriz[vj - 1][vi - 1] = matriz[vj - 1][vi - 1] - 1
+        else:
+            matriz[vi][vj] = matriz[vi][vj] - 1
+    print(matriz)
+    return matriz
+
+
+def insereVertice(matriz):
+    f = np.shape(matriz)[0]
+    matriz = np.insert(matriz, f, 0, 1)
+    matriz = np.insert(matriz, f, 0, 0)
+    print(matriz)
+    return matriz
+
+
+def removeVertice(matriz, v):
+    f = np.shape(matriz)[0]
+    for j in range(0, f):
+        matriz[v][j] = -1
+        matriz[j][v] = -1
+    matriz = np.array(matriz)
+    print(matriz)
+    return matriz
+
+
+Instancia = input("Digite o nome do arquivo\n")  # Pedindo ao usuário que entre com o nome do arquivo
+Matx = criaMatriz(Instancia)
+removeVertice(Matx, 0)
+'''Resultados = "C:/Users/gabri/AT1/Resultado/Resultado"#Local do arquivo para que os Resultado sejam salvos
+with open(Resultados, "w") as R:
+    R.write("O nome do arquivo é:  "+Instancia
+            +"\nLinhas:  "+ str(Linhas)
+            +"\nColunas:  "+ str(Colunas))#Salvando os resultados no Arquivo'''
